@@ -351,7 +351,6 @@ function jugarWordix($palabraWordix, $nombreUsuario)
     escribirMensajeBienvenida($nombreUsuario);
     $nroIntento = 1;
     do {
-
         echo "Comenzar con el Intento " . $nroIntento . ":\n";
         $palabraIntento = leerPalabra5Letras();
         $indiceIntento = $nroIntento - 1;

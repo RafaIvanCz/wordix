@@ -44,6 +44,7 @@ function cargarColeccionPalabras()
     return ($coleccionPalabras);
 }
 
+
 /* ****COMPLETAR***** */
 
 
@@ -54,9 +55,13 @@ function cargarColeccionPalabras()
 
 //Declaración de variables:
 $opcion = 0;
+$cantidadPartidas = 0;
+$guardarPartida = 0;
+$mostrarPartida = 1;
 
 //Inicialización de variables:
-$arrayPartidas = [];
+$partidaJugador = [];
+$coleccionPartidas = [];
 
 //Proceso:
 
@@ -82,10 +87,16 @@ do {
             echo "Ingrese un número entre 1 y " . count(cargarColeccionPalabras()) . " para seleccionar la palabra misteriosa: ";
             $numeroPalabra = trim(fgets(STDIN));
 
-            echo "\nTenes 6 intentos para intentar adivinar la palabra misteriosa! BUENA SUERTE!\n\n";
+            echo "\nTenés 6 intentos para intentar adivinar la palabra misteriosa! BUENA SUERTE!\n\n";
             $palabrasCargadas = cargarColeccionPalabras();
-            $arrayPartidas = jugarWordix($palabrasCargadas[$numeroPalabra - 1], $nombreUsuario);
-            print_r($arrayPartidas);
+            $partidaJugador = jugarWordix($palabrasCargadas[$numeroPalabra - 1], $nombreUsuario);
+            $coleccionPartidas[$cantidadPartidas] = $partidaJugador;
+            $cantidadPartidas++;
+            
+
+            for ($i = 0; $i < count($totalPartidas); $i++) { 
+                echo "Colección Partidas";
+            }
 
             break;
         case 2:
