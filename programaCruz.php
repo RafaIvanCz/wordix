@@ -71,7 +71,7 @@ function seleccionarOpcion()
     $opcion = 0;
 
     do {
-        echo "Ingrese una opción:
+        echo "\nIngrese una opción:
         1) Jugar al wordix con una palabra elegida.
         2) Jugar al wordix con una palabra aleatoria.
         3) Mostrar una partida.
@@ -116,21 +116,55 @@ do {
 
     switch ($opcionElegida) {
         case 1:
-            //Jugar al wordix con una palabra elegida: se inicia la par da de wordix solicitando el nombre del jugador y un número de palabra para jugar. Si el número de palabra ya fue utilizada por el jugador, el programa debe indicar que debe elegir otro número de palabra.
-            
+            //Jugar al wordix con una palabra elegida: se inicia la par da de wordix solicitando el nombre del jugador y un número de palabra para jugar. Si el número de palabra ya fue utilizada por el jugador, el programa debe indicar que debe elegir otro número de palabra. Luego de finalizar la partida, los datos de la partida deben ser guardados en una estructura de datos de partidas.
+
             echo "Ingrese su nombre: ";
             $nombreUsuario = trim(fgets(STDIN));
-            echo "Ingrese un número entre 1 y " . $cantidadPalabras . " para seleccionar la palabra misteriosa: ";
-            $numeroPalabra = trim(fgets(STDIN));
+            do {
+                $palabraUtilizada = false;
+                $numeroPalabra = solicitarNumeroEntre(1, $cantidadPalabras);
+                $palabraElegida = $coleccionTotalPalabras[$numeroPalabra - 1];
 
-            echo "\nTenés 6 intentos para intentar adivinar la palabra misteriosa! BUENA SUERTE!\n\n";
+                for ($i = 0; $i < count($totalPartidas); $i++) {
+                    if ($totalPartidas[$i]["jugador"] == $nombreUsuario && $totalPartidas[$i]["palabraWordix"] == $palabraElegida) {
+                        echo "Palabra ya utilizada.\n";
+                        $palabraUtilizada = true;
+                        break;
+                    }
+                }
+
+            } while ($palabraUtilizada);
+
+            echo "\nTenés 6 chances para intentar adivinar la palabra misteriosa. ¡¡¡BUENA SUERTE!!!\n\n";
             $partidaJugador = jugarWordix($coleccionTotalPalabras[$numeroPalabra - 1], $nombreUsuario);
             $totalPartidas[$cantidadPartidas] = $partidaJugador;
             $cantidadPartidas++;
 
             break;
         case 2:
-            //Jugar al wordix con una palabra aleatoria: se inicia la par da de wordix solicitando el nombre del jugador. El programa elegirá una palabra aleatoria de las disponibles para jugar, el programa debe asegurarse que la palabra no haya sido jugada por el Jugador.
+            //Jugar al wordix con una palabra aleatoria: se inicia la par da de wordix solicitando el nombre del jugador. El programa elegirá una palabra aleatoria de las disponibles para jugar, el programa debe asegurarse que la palabra no haya sido jugada por el Jugador. Luego de finalizar la partida, los datos de la partida deben ser guardados en una estructura de datos de partidas.
+            echo "Ingrese su nombre: ";
+            $nombreUsuario = trim(fgets(STDIN));
+
+            do {
+                $palabraUtilizada = false;
+                $numeroPalabra = rand(1, $cantidadPalabras);
+                $palabraElegida = $coleccionTotalPalabras[$numeroPalabra - 1];
+
+                for ($i = 0; $i < count($totalPartidas); $i++) {
+                    if ($totalPartidas[$i]["jugador"] == $nombreUsuario && $totalPartidas[$i]["palabraWordix"] == $palabraElegida) {
+                        echo "Palabra ya utilizada.\n";
+                        $palabraUtilizada = true;
+                        break;
+                    }
+                }
+
+            } while ($palabraUtilizada);
+
+            echo "\nLa palabra fue elegida al azar y no será una que ya hayas elegido.\nTenés 6 chances para intentar adivinar la palabra misteriosa. ¡¡¡BUENA SUERTE!!!\n\n";
+            $partidaJugador = jugarWordix($coleccionTotalPalabras[$numeroPalabra - 1], $nombreUsuario);
+            $totalPartidas[$cantidadPartidas] = $partidaJugador;
+            $cantidadPartidas++;
 
             break;
         case 3:
@@ -162,7 +196,7 @@ do {
             echo "Hasta pronto!👋👋👋\n";
             break;
         default:
-
+            echo "Opción incorrecta.\n\n";
             break;
     }
 } while ($opcionElegida != 8);
