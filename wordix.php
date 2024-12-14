@@ -159,7 +159,7 @@ function leerPalabra5Letras()
     $palabra  = strtoupper($palabra);
 
     while ((strlen($palabra) != 5) || !esPalabra($palabra)) {
-        echo "Debe ingresar una palabra de 5 letras:";
+        echo "Debe ingresar una palabra de 5 letras: ";
         $palabra = strtoupper(trim(fgets(STDIN)));
     }
     return $palabra;

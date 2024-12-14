@@ -19,34 +19,49 @@ include_once("wordix.php");
  * Obtiene una colección de palabras
  * @return array
  */
-function cargarColeccionPalabras($arrayPalabras, $nuevaPalabra)
+function cargarColeccionPalabras()
 {
-    if (count($arrayPalabras) == 0) {
-        $coleccionPalabras = [
-            "MUJER",
-            "QUESO",
-            "FUEGO",
-            "CASAS",
-            "RASGO",
-            "GATOS",
-            "GOTAS",
-            "HUEVO",
-            "TINTO",
-            "NAVES",
-            "VERDE",
-            "MELON",
-            "YUYOS",
-            "PIANO",
-            "PISOS"
-            /* Agregar 5 palabras más */
-        ];
+    $coleccionPalabras = [
+        "MUJER",
+        "QUESO",
+        "FUEGO",
+        "CASAS",
+        "RASGO",
+        "GATOS",
+        "GOTAS",
+        "HUEVO",
+        "TINTO",
+        "NAVES",
+        "VERDE",
+        "MELON",
+        "YUYOS",
+        "PIANO",
+        "PISOS"
+        /* Agregar 5 palabras más */
+    ];
+    return ($coleccionPalabras);
+}
 
-        $arrayPalabras = array_merge($arrayPalabras, $coleccionPalabras);
-    }
+function agregarPalabra($arrayPalabras, $nuevaPalabra)
+{
+    do {
+        $existePalabra = false;
 
-    if ($nuevaPalabra != "" && $nuevaPalabra != null) {
-        $arrayPalabras[] = $nuevaPalabra;
-    }
+        for ($i = 0; $i < count($arrayPalabras); $i++) {
+            if ($nuevaPalabra == $arrayPalabras[$i]) {
+                echo "La palabra ya existe! Intente con otra.\n";
+                $existePalabra = true;
+                break;
+            }
+        }
+
+        if (!$existePalabra) {
+            $arrayPalabras[] = $nuevaPalabra;
+            echo "Palabra agregada con éxito!\n";
+        } else {
+            $nuevaPalabra = leerPalabra5Letras();
+        }
+    } while ($existePalabra);
 
     return ($arrayPalabras);
 }
@@ -87,38 +102,31 @@ $opcion = 0;
 $cantidadPartidas = 0;
 $guardarPartida = 0;
 $mostrarPartida = 1;
-$palabraNueva = "";
 
 //Inicialización de variables:
 $partidaJugador = [];
 $totalPartidas = [];
-$coleccionTotalPalabras = [];
-$cantidadPalabras = count(cargarColeccionPalabras($coleccionTotalPalabras, $palabraNueva));
+$coleccionTotalPalabras = cargarColeccionPalabras();
+$cantidadPalabras = count($coleccionTotalPalabras);
 
 //Proceso:
 
 do {
-
     $opcionElegida = seleccionarOpcion();
 
     switch ($opcionElegida) {
         case 1:
             //Jugar al wordix con una palabra elegida: se inicia la par da de wordix solicitando el nombre del jugador y un número de palabra para jugar. Si el número de palabra ya fue utilizada por el jugador, el programa debe indicar que debe elegir otro número de palabra.
-
+            
             echo "Ingrese su nombre: ";
             $nombreUsuario = trim(fgets(STDIN));
             echo "Ingrese un número entre 1 y " . $cantidadPalabras . " para seleccionar la palabra misteriosa: ";
             $numeroPalabra = trim(fgets(STDIN));
 
             echo "\nTenés 6 intentos para intentar adivinar la palabra misteriosa! BUENA SUERTE!\n\n";
-            $palabrasCargadas = cargarColeccionPalabras($coleccionTotalPalabras, null);
-            $partidaJugador = jugarWordix($palabrasCargadas[$numeroPalabra - 1], $nombreUsuario);
+            $partidaJugador = jugarWordix($coleccionTotalPalabras[$numeroPalabra - 1], $nombreUsuario);
+            $totalPartidas[$cantidadPartidas] = $partidaJugador;
             $cantidadPartidas++;
-            $totalPartidas[$cantidadPartidas - 1] = $partidaJugador;
-
-            for ($i = 0; $i < count($totalPartidas); $i++) {
-                echo $totalPartidas[$i];
-            }
 
             break;
         case 2:
@@ -135,33 +143,16 @@ do {
 
             break;
         case 6:
-            $coleccionTotalPalabras = cargarColeccionPalabras($coleccionTotalPalabras, $palabraNueva);
-            $cantidadPalabras = count($coleccionTotalPalabras);
-
             echo "Cantidad de palabras cargadas: " . $cantidadPalabras . "\n";
 
             break;
         case 7:
-            //Agregar una palabra de 5 letras a Wordix: Debe solicitar una palabra de 5 letras al usuario y agregarla en mayúsculas a la colección de palabras que posee Wordix, para que el usuario pueda u lizarla para jugar.
+            //Agregar una palabra de 5 letras a Wordix: Debe solicitar una palabra de 5 letras al usuario y agregarla en mayúsculas a la colección de palabras que posee Wordix, para que el usuario pueda utlizarla para jugar.
 
             if ($cantidadPalabras < 20) {
-                do {
-                    $existePalabra = false;
-                    $palabraNueva = leerPalabra5Letras();
-
-                    for ($i = 0; $i < $cantidadPalabras; $i++) {
-                        if ($palabraNueva == $coleccionTotalPalabras[$i]) {
-                            echo "La palabra ya existe! Intente con otra.\n";
-                            $existePalabra = true;
-                            break;
-                        }
-                    }
-
-                    if (!$existePalabra) {
-                        cargarColeccionPalabras($coleccionTotalPalabras, $palabraNueva);
-                        echo "Palabra agregada con éxito!\n";
-                    }
-                } while ($existePalabra);
+                $palabraNueva = leerPalabra5Letras();
+                $coleccionTotalPalabras = agregarPalabra($coleccionTotalPalabras, $palabraNueva);
+                $cantidadPalabras = count($coleccionTotalPalabras);
             } else {
                 echo "LLegó a la cantidad límite de palabras guardadas. Ya no puede agregar palabras nuevas.\n";
             }
