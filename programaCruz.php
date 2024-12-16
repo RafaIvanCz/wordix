@@ -42,6 +42,19 @@ function cargarColeccionPalabras()
     return ($coleccionPalabras);
 }
 
+function cargarPartidas()
+{
+    $nombreJugadores = ["Ivan", "Maria", "Lucas", "Jorge", "Lorena"];
+    $colecPalabras = cargarColeccionPalabras();
+    $coleccionPartidas = [];
+
+    for ($i = 0; $i < 10; $i++) {
+        $coleccionPartidas[$i] = ["palabraWordix" => $colecPalabras[rand(0, count($colecPalabras) - 1)], "jugador" => strtolower($nombreJugadores[rand(0, count($nombreJugadores) - 1)]), "intentos" => rand(0, 6), "puntaje" => rand(0, 15)];
+    }
+
+    return ($coleccionPartidas);
+}
+
 function agregarPalabra($arrayPalabras, $nuevaPalabra)
 {
     do {
@@ -64,6 +77,19 @@ function agregarPalabra($arrayPalabras, $nuevaPalabra)
     } while ($existePalabra);
 
     return ($arrayPalabras);
+}
+
+function mostrarPartida($partidas, $partidaNro)
+{
+    $mensajePartida = "";
+
+    if ($partidas[$partidaNro]["intentos"] == 0) {
+        $mensajePartida = "No adivinó la palabra";
+    } else {
+        $mensajePartida = "Adivinó la palabra en " . $partidas[$partidaNro]["intentos"] . " intentos";
+    }
+
+    echo "\nPartida WORDIX " . $partidaNro . ": palabra " . $partidas[$partidaNro]["palabraWordix"] . "\nJugador: " . $partidas[$partidaNro]["jugador"] . "\nPuntaje: " . $partidas[$partidaNro]["puntaje"] . "\nIntentos: " . $mensajePartida . "\n";
 }
 
 function seleccionarOpcion()
@@ -101,13 +127,12 @@ function seleccionarOpcion()
 $opcion = 0;
 $cantidadPartidas = 0;
 $guardarPartida = 0;
-$mostrarPartida = 1;
 
 //Inicialización de variables:
 $partidaJugador = [];
-$totalPartidas = [];
-$coleccionTotalPalabras = cargarColeccionPalabras();
-$cantidadPalabras = count($coleccionTotalPalabras);
+$totalPartidas = cargarPartidas();
+$coleccionPalabras = cargarColeccionPalabras();
+$cantidadPalabras = count($coleccionPalabras);
 
 //Proceso:
 
@@ -123,7 +148,7 @@ do {
             do {
                 $palabraUtilizada = false;
                 $numeroPalabra = solicitarNumeroEntre(1, $cantidadPalabras);
-                $palabraElegida = $coleccionTotalPalabras[$numeroPalabra - 1];
+                $palabraElegida = $coleccionPalabras[$numeroPalabra - 1];
 
                 for ($i = 0; $i < count($totalPartidas); $i++) {
                     if ($totalPartidas[$i]["jugador"] == $nombreUsuario && $totalPartidas[$i]["palabraWordix"] == $palabraElegida) {
@@ -132,13 +157,11 @@ do {
                         break;
                     }
                 }
-
             } while ($palabraUtilizada);
 
             echo "\nTenés 6 chances para intentar adivinar la palabra misteriosa. ¡¡¡BUENA SUERTE!!!\n\n";
-            $partidaJugador = jugarWordix($coleccionTotalPalabras[$numeroPalabra - 1], $nombreUsuario);
-            $totalPartidas[$cantidadPartidas] = $partidaJugador;
-            $cantidadPartidas++;
+            $partidaJugador = jugarWordix($coleccionPalabras[$numeroPalabra - 1], $nombreUsuario);
+            $totalPartidas[count($totalPartidas)] = $partidaJugador;
 
             break;
         case 2:
@@ -149,7 +172,7 @@ do {
             do {
                 $palabraUtilizada = false;
                 $numeroPalabra = rand(1, $cantidadPalabras);
-                $palabraElegida = $coleccionTotalPalabras[$numeroPalabra - 1];
+                $palabraElegida = $coleccionPalabras[$numeroPalabra - 1];
 
                 for ($i = 0; $i < count($totalPartidas); $i++) {
                     if ($totalPartidas[$i]["jugador"] == $nombreUsuario && $totalPartidas[$i]["palabraWordix"] == $palabraElegida) {
@@ -158,16 +181,34 @@ do {
                         break;
                     }
                 }
-
             } while ($palabraUtilizada);
 
-            echo "\nLa palabra fue elegida al azar y no será una que ya hayas elegido.\nTenés 6 chances para intentar adivinar la palabra misteriosa. ¡¡¡BUENA SUERTE!!!\n\n";
-            $partidaJugador = jugarWordix($coleccionTotalPalabras[$numeroPalabra - 1], $nombreUsuario);
-            $totalPartidas[$cantidadPartidas] = $partidaJugador;
-            $cantidadPartidas++;
+            echo "\nLa palabra fue elegida al azar y no será una que ya hayas jugado.\nTenés 6 chances para intentar adivinar la palabra misteriosa. ¡¡¡BUENA SUERTE!!!\n\n";
+            $partidaJugador = jugarWordix($coleccionPalabras[$numeroPalabra - 1], $nombreUsuario);
+            $totalPartidas[count($totalPartidas)] = $partidaJugador;
 
             break;
         case 3:
+            //Mostrar una partida: Se le solicita al usuario un número de partida y se muestra en pantalla con el siguiente formato:
+            //Partida WORDIX <numero>: palabra <palabra>
+            //Jugador: <nombre>
+            //Puntaje: <puntaje> puntos
+            //Intento: No adivinó la palabra | Adivinó la palabra en <X> intentos
+            //Si el número de partida no existe, el programa deberá indicar el error y volver a solicitar un número de partida correcto.
+            $numeroPartida = 0;
+
+            do {
+                echo "Hay " . count($totalPartidas) . " partidas jugadas. Ingresa el número de la que desees ver con detalle: ";
+                $numeroPartida = trim(fgets(STDIN));
+
+                if ($numeroPartida < 1 || $numeroPartida > count($totalPartidas))
+                    echo "Número fuera de rango.\n";
+
+            } while ($numeroPartida < 1 || $numeroPartida > count($totalPartidas));
+
+            $numeroPartida--;
+
+            mostrarPartida($totalPartidas, $numeroPartida);
 
             break;
         case 4:
@@ -185,8 +226,8 @@ do {
 
             if ($cantidadPalabras < 20) {
                 $palabraNueva = leerPalabra5Letras();
-                $coleccionTotalPalabras = agregarPalabra($coleccionTotalPalabras, $palabraNueva);
-                $cantidadPalabras = count($coleccionTotalPalabras);
+                $coleccionPalabras = agregarPalabra($coleccionPalabras, $palabraNueva);
+                $cantidadPalabras = count($coleccionPalabras);
             } else {
                 echo "LLegó a la cantidad límite de palabras guardadas. Ya no puede agregar palabras nuevas.\n";
             }
