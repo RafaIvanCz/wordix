@@ -44,7 +44,7 @@ function cargarColeccionPalabras()
 
 function cargarPartidas()
 {
-    $nombreJugadores = ["Ivan", "Maria", "Lucas", "Jorge", "Lorena"];
+    $nombreJugadores = ["Ivan", "Maria", "Lucas", "Jorge", "Abigail"];
     $colecPalabras = cargarColeccionPalabras();
     $coleccionPartidas = [];
 
@@ -89,7 +89,38 @@ function mostrarPartida($partidas, $partidaNro)
         $mensajePartida = "Adivinó la palabra en " . $partidas[$partidaNro]["intentos"] . " intentos";
     }
 
-    echo "\nPartida WORDIX " . $partidaNro . ": palabra " . $partidas[$partidaNro]["palabraWordix"] . "\nJugador: " . $partidas[$partidaNro]["jugador"] . "\nPuntaje: " . $partidas[$partidaNro]["puntaje"] . "\nIntentos: " . $mensajePartida . "\n";
+    echo "\nPartida WORDIX " . $partidaNro + 1 . ": palabra " . $partidas[$partidaNro]["palabraWordix"] . "\nJugador: " . $partidas[$partidaNro]["jugador"] . "\nPuntaje: " . $partidas[$partidaNro]["puntaje"] . "\nIntentos: " . $mensajePartida . "\n";
+}
+
+function solicitarJugador()
+{
+    $esLetra = false;
+
+    while (!$esLetra) {
+        echo "Ingrese el nombre del jugador: ";
+        $nombre = strtolower(trim(fgets(STDIN)));
+
+        if (ctype_alpha($nombre[0])) {
+            $esLetra = true;
+        } else {
+            echo "El nombre debe comenzar con una letra.\n";
+        }
+    }
+    return $nombre;
+}
+
+function obtenerPrimerPartidaGanada($partidasTotales, $jugadorNombre)
+{
+    $indice = -1;
+
+    for ($i = 0; $i < count($partidasTotales); $i++) {
+        if ($partidasTotales[$i]["jugador"] == $jugadorNombre && $partidasTotales[$i]["puntaje"] > 0) {
+            $indice = $i;
+            break;
+        }
+    }
+
+    return $indice;
 }
 
 function seleccionarOpcion()
@@ -144,7 +175,7 @@ do {
             //Jugar al wordix con una palabra elegida: se inicia la par da de wordix solicitando el nombre del jugador y un número de palabra para jugar. Si el número de palabra ya fue utilizada por el jugador, el programa debe indicar que debe elegir otro número de palabra. Luego de finalizar la partida, los datos de la partida deben ser guardados en una estructura de datos de partidas.
 
             echo "Ingrese su nombre: ";
-            $nombreUsuario = trim(fgets(STDIN));
+            $nombreUsuario = strtolower(trim(fgets(STDIN)));
             do {
                 $palabraUtilizada = false;
                 $numeroPalabra = solicitarNumeroEntre(1, $cantidadPalabras);
@@ -165,7 +196,7 @@ do {
 
             break;
         case 2:
-            //Jugar al wordix con una palabra aleatoria: se inicia la par da de wordix solicitando el nombre del jugador. El programa elegirá una palabra aleatoria de las disponibles para jugar, el programa debe asegurarse que la palabra no haya sido jugada por el Jugador. Luego de finalizar la partida, los datos de la partida deben ser guardados en una estructura de datos de partidas.
+            //Jugar al wordix con una palabra aleatoria: se inicia la partida de wordix solicitando el nombre del jugador. El programa elegirá una palabra aleatoria de las disponibles para jugar, el programa debe asegurarse que la palabra no haya sido jugada por el Jugador. Luego de finalizar la partida, los datos de la partida deben ser guardados en una estructura de datos de partidas.
             echo "Ingrese su nombre: ";
             $nombreUsuario = trim(fgets(STDIN));
 
@@ -203,7 +234,6 @@ do {
 
                 if ($numeroPartida < 1 || $numeroPartida > count($totalPartidas))
                     echo "Número fuera de rango.\n";
-
             } while ($numeroPartida < 1 || $numeroPartida > count($totalPartidas));
 
             $numeroPartida--;
@@ -212,6 +242,16 @@ do {
 
             break;
         case 4:
+            //Mostrar la primer partida ganadora: Se le solicita al usuario un nombre de jugador y se muestra en pantalla el primer juego ganado por dicho jugador. En caso que el jugador no ganó ninguna partida, se debe indicar: “El jugador majo no ganó ninguna partida”.
+
+            $nombreJugador = solicitarJugador();
+            $valorIndice = obtenerPrimerPartidaGanada($totalPartidas, $nombreJugador);
+
+            if ($valorIndice != -1) {
+                echo "\nPartida WORDIX " . $valorIndice + 1 . ": palabra " . $totalPartidas[$valorIndice]["palabraWordix"] . "\nJugador: " . $totalPartidas[$valorIndice]["jugador"] . "\nPuntaje: " . $totalPartidas[$valorIndice]["puntaje"] . "\nIntentos: " . $totalPartidas[$valorIndice]["intentos"] . "\n";
+            } else {
+                echo "El jugador " . $nombreJugador . " no ganó ninguna partida.\n";
+            }
 
             break;
         case 5:
@@ -229,7 +269,7 @@ do {
                 $coleccionPalabras = agregarPalabra($coleccionPalabras, $palabraNueva);
                 $cantidadPalabras = count($coleccionPalabras);
             } else {
-                echo "LLegó a la cantidad límite de palabras guardadas. Ya no puede agregar palabras nuevas.\n";
+                echo "LLegó a la cantidad límite de palabras guardadas (" . $cantidadPalabras . "). Ya no puede agregar palabras nuevas.\n";
             }
 
             break;
