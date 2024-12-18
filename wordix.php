@@ -27,7 +27,7 @@ const ESTADO_LETRA_PERTENECE = "pertenece";
 /**************************************/
 
 /**
- *  ****COMPLETAR*****
+ *  ****COMPLETAR***** COMPLETADA
  * Este módulo solicita un número entre un rango mínimo y máximo que recibe por parámetro
  * @param int $min
  * @param int $max
@@ -124,7 +124,7 @@ function escribirSegunEstado($texto, $estado)
 }
 
 /**
- * ****COMPLETAR*****
+ * ****COMPLETAR***** COMPLETADA
  * Este módulo muestra un mensaje de bienvenida al usuario
  * @param string $usuario
  */
@@ -139,7 +139,7 @@ function escribirMensajeBienvenida($usuario)
 
 
 /**
- * ****COMPLETAR*****
+ * ****COMPLETAR***** COMPLETADA
  * Este módulo verifica que la palabra que se ingresa tenga letras como caracteres
  * @param string $cadena
  * @return boolean
@@ -340,9 +340,16 @@ function esIntentoGanado($estructuraPalabraIntento)
 
 /**
  * ****COMPLETAR***** documentación de la intefaz
+ * Este módulo obtiene el puntaje de cada jugada ganada
+ * @param string $palabra
+ * @param int $cantidadIntentos
+ * @return int
  */
 function obtenerPuntajeWordix($palabra, $cantidadIntentos)  /* ****COMPLETAR***** parámetros formales necesarios */
 {
+    //int $cantCaracteres, $puntaje
+    //string $letraIntento
+    
     $letrasConValor = [
         'A' => 1, 'E' => 1, 'I' => 1, 'O' => 1, 'U' => 1,
         'B' => 2, 'C' => 2, 'D' => 2, 'F' => 2, 'G' => 2, 'H' => 2,
