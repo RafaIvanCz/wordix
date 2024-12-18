@@ -28,6 +28,10 @@ const ESTADO_LETRA_PERTENECE = "pertenece";
 
 /**
  *  ****COMPLETAR*****
+ * Este módulo solicita un número entre un rango mínimo y máximo que recibe por parámetro
+ * @param int $min
+ * @param int $max
+ * @return int
  */
 function solicitarNumeroEntre($min, $max)
 {
@@ -121,6 +125,8 @@ function escribirSegunEstado($texto, $estado)
 
 /**
  * ****COMPLETAR*****
+ * Este módulo muestra un mensaje de bienvenida al usuario
+ * @param string $usuario
  */
 function escribirMensajeBienvenida($usuario)
 {
@@ -134,6 +140,9 @@ function escribirMensajeBienvenida($usuario)
 
 /**
  * ****COMPLETAR*****
+ * Este módulo verifica que la palabra que se ingresa tenga letras como caracteres
+ * @param string $cadena
+ * @return boolean
  */
 function esPalabra($cadena)
 {
@@ -150,6 +159,8 @@ function esPalabra($cadena)
 
 /**
  *  ****COMPLETAR*****
+ * Este módulo verifica que la palabra que se ingrese sea de 5 letras y contenga letras como caracteres
+ * @return string
  */
 function leerPalabra5Letras()
 {
